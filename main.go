@@ -63,5 +63,5 @@ func main() {
 		utils.WriteOutput(OutputArray, state)
 	}
 
-	fmt.Printf("\n\n[%s%s%s] Enjoy the hunt! \\o/", utils.Info, utils.Now(), utils.Reset)
+	fmt.Printf("\n\n[%s%s%s] Enjoy the hunt! \\o/\n", utils.Info, utils.Now(), utils.Reset)
 }
