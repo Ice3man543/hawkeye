@@ -40,7 +40,7 @@ To run it against my home directory, i can pass /home/ice3man as the argument.
 ```bash
 ./hawkeye -d /home/ice3man
 
- ✘ ice3man@TheDaemon  ~/tmp  ./hawkeye -d /home/ice3man  
+ ice3man@TheDaemon  ~/tmp  ./hawkeye -d /home/ice3man  
 
  _  _                _    ___           
 | || | __ _ __ __ __| |__| __|_  _  ___ 
@@ -82,6 +82,23 @@ You can use `-v` flag to show verbose output. You can also get json output using
     },
 ]
 ```
+
+You can list the signatures present in the tool's database by using `-l` option.
+```bash
+[-] Signatures present in Database:
+	-> CryptoFiles
+	-> PasswordFiles
+	-> ConfigurationFiles
+	-> DatabaseFiles
+	-> MiscFiles
+```
+
+You can specify the signatures to be used by the tool by passing the `--sig` flag. It takes a comma-separated list of signatures to be used. You can also specify exclusion of certain signatures using `--exclude-sig` flag.
+```bash
+ice3man@TheDaemon  ~/tmp  ./hawkeye -d /home/ice3man -sig cryptofiles
+ice3man@TheDaemon  ~/tmp  ./hawkeye -d /home/ice3man -exclude-sig miscfiles
+```
+
 
 # License
 

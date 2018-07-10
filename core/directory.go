@@ -7,26 +7,94 @@ import (
 	"github.com/karrick/godirwalk"
 )
 
-func WorkPath(pathChan <-chan string, resultChan chan<- *utils.Output) {
+func WorkPath(pathChan <-chan string, resultChan chan<- *utils.Output, state *utils.State) {
 	for path := range pathChan {
+		found := false
+
 		matchFile := NewMatchFile(path)
 		if matchFile.IsSkippable() {
 			continue
 		}
 
-		for _, signature := range Signatures {
-			if signature.Match(matchFile) {
-				output := &utils.Output{
-					Path:        path,
-					Description: signature.Description(),
-					Comment:     signature.Comment(),
-				}
+		if state.Signature.CryptoFiles {
+			for _, signature := range CryptoFilesSignatures {
+				if signature.Match(matchFile) {
+					output := &utils.Output{
+						Path:        path,
+						Description: signature.Description(),
+						Comment:     signature.Comment(),
+					}
 
-				resultChan <- output
-				break
+					resultChan <- output
+					found = true
+					break
+				}
 			}
 		}
 
+		if !found && state.Signature.PasswordFiles {
+			for _, signature := range PasswordFileSignatures {
+				if signature.Match(matchFile) {
+					output := &utils.Output{
+						Path:        path,
+						Description: signature.Description(),
+						Comment:     signature.Comment(),
+					}
+
+					resultChan <- output
+					found = true
+					break
+				}
+			}
+		}
+
+		if !found && state.Signature.ConfigurationFiles {
+			for _, signature := range ConfigurationFileSignatures {
+				if signature.Match(matchFile) {
+					output := &utils.Output{
+						Path:        path,
+						Description: signature.Description(),
+						Comment:     signature.Comment(),
+					}
+
+					resultChan <- output
+					found = true
+					break
+				}
+			}
+		}
+
+		if !found && state.Signature.DatabaseFiles {
+			for _, signature := range DatabaseFileSignatures {
+				if signature.Match(matchFile) {
+					output := &utils.Output{
+						Path:        path,
+						Description: signature.Description(),
+						Comment:     signature.Comment(),
+					}
+
+					resultChan <- output
+					found = true
+					break
+				}
+			}
+		}
+
+		if !found && state.Signature.MiscFiles {
+			for _, signature := range MiscSignatures {
+				if signature.Match(matchFile) {
+					output := &utils.Output{
+						Path:        path,
+						Description: signature.Description(),
+						Comment:     signature.Comment(),
+					}
+
+					resultChan <- output
+					found = true
+					break
+				}
+			}
+		}
 	}
 }
 

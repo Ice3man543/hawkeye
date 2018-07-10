@@ -11,12 +11,21 @@ import (
 
 func main() {
 	fmt.Printf(utils.Banner)
-	fmt.Printf("\n[%s%s%s] HawkEye : An advance filesystem analysis tool", utils.Info, utils.Now(), utils.Reset)
-	fmt.Printf("\n[%s%s%s] Written By : @Ice3man", utils.Info, utils.Now(), utils.Reset)
-	fmt.Printf("\n[%s%s%s] Github : https://github.com/Ice3man543\n\n", utils.Info, utils.Now(), utils.Reset)
+	fmt.Printf("\n[%s-%s] HawkEye : An advance filesystem analysis tool", utils.Info, utils.Reset)
+	fmt.Printf("\n[%s-%s] Written By : @Ice3man", utils.Info, utils.Reset)
+	fmt.Printf("\n[%s-%s] Github : https://github.com/Ice3man543\n\n", utils.Info, utils.Reset)
 
 	state := utils.ParseArguments()
 
+	_ = core.ParseSignaturesFromCommandLine(state)
+
+	if state.ListSignatures {
+		fmt.Printf("\n[-] Signatures present in Database:\n")
+		for _, sig := range core.DefaultSignatures {
+			fmt.Printf("\t-> %s\n", sig)
+		}
+		os.Exit(1)
+	}
 	if state.Directory == "" {
 		fmt.Printf("\nhawkeye: no directory specified\n")
 		fmt.Printf("For Usage instructions, use -h flag\n")
@@ -35,7 +44,7 @@ func main() {
 		for i := 0; i < state.Threads; i++ {
 			go func() {
 				defer wg.Done()
-				core.WorkPath(pathChan, resultChan)
+				core.WorkPath(pathChan, resultChan, state)
 			}()
 		}
 
@@ -63,5 +72,5 @@ func main() {
 		utils.WriteOutput(OutputArray, state)
 	}
 
-	fmt.Printf("\n\n[%s%s%s] Enjoy the hunt! \\o/", utils.Info, utils.Now(), utils.Reset)
+	fmt.Printf("\n\n[%s\\o/%s] Enjoy the hunt!\n", utils.Info, utils.Reset)
 }
