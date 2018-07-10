@@ -104,8 +104,9 @@ ice3man@TheDaemon  ~/tmp  ./hawkeye -d /home/ice3man -exclude-sig miscfile
 
 HawkEye is made with 🖤 by [Ice3man](https://github.com/Ice3man543).
 
-By me a coffee if you appreciate my work.
+Buy me a coffee if you appreciate my work.
 
+[![Buy me a coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Ice3man)
 [![ko-fi](https://www.ko-fi.com/img/donate_sm.png)](https://ko-fi.com/M4M7FAVC)
 
 See the **License** file for more details.
