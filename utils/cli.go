@@ -18,7 +18,7 @@ var Banner = `
 func ParseArguments() *State {
 	s := State{}
 
-	flag.IntVar(&s.Threads, "t", 20, "Number of threads to use")
+	flag.IntVar(&s.Threads, "t", 100, "Number of threads to use")
 	flag.StringVar(&s.Directory, "d", "", "Directory to search stuff in (Required)")
 	flag.StringVar(&s.Output, "o", "", "File to write enumeration output to")
 	flag.StringVar(&s.Signatures, "sig", "", "Signatures for type of files to find")

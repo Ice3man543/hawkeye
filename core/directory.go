@@ -7,92 +7,24 @@ import (
 	"github.com/karrick/godirwalk"
 )
 
-func WorkPath(pathChan <-chan string, resultChan chan<- *utils.Output, state *utils.State) {
+func WorkPath(pathChan <-chan string, resultChan chan<- *utils.Output, state *utils.State, SignaturesUsed []Signature) {
 	for path := range pathChan {
-		found := false
 
 		matchFile := NewMatchFile(path)
 		if matchFile.IsSkippable() {
 			continue
 		}
 
-		if state.Signature.CryptoFiles {
-			for _, signature := range CryptoFilesSignatures {
-				if signature.Match(matchFile) {
-					output := &utils.Output{
-						Path:        path,
-						Description: signature.Description(),
-						Comment:     signature.Comment(),
-					}
-
-					resultChan <- output
-					found = true
-					break
+		for _, signature := range SignaturesUsed {
+			if signature.Match(matchFile) {
+				output := &utils.Output{
+					Path:        path,
+					Description: signature.Description(),
+					Comment:     signature.Comment(),
 				}
-			}
-		}
 
-		if !found && state.Signature.PasswordFiles {
-			for _, signature := range PasswordFileSignatures {
-				if signature.Match(matchFile) {
-					output := &utils.Output{
-						Path:        path,
-						Description: signature.Description(),
-						Comment:     signature.Comment(),
-					}
-
-					resultChan <- output
-					found = true
-					break
-				}
-			}
-		}
-
-		if !found && state.Signature.ConfigurationFiles {
-			for _, signature := range ConfigurationFileSignatures {
-				if signature.Match(matchFile) {
-					output := &utils.Output{
-						Path:        path,
-						Description: signature.Description(),
-						Comment:     signature.Comment(),
-					}
-
-					resultChan <- output
-					found = true
-					break
-				}
-			}
-		}
-
-		if !found && state.Signature.DatabaseFiles {
-			for _, signature := range DatabaseFileSignatures {
-				if signature.Match(matchFile) {
-					output := &utils.Output{
-						Path:        path,
-						Description: signature.Description(),
-						Comment:     signature.Comment(),
-					}
-
-					resultChan <- output
-					found = true
-					break
-				}
-			}
-		}
-
-		if !found && state.Signature.MiscFiles {
-			for _, signature := range MiscSignatures {
-				if signature.Match(matchFile) {
-					output := &utils.Output{
-						Path:        path,
-						Description: signature.Description(),
-						Comment:     signature.Comment(),
-					}
-
-					resultChan <- output
-					found = true
-					break
-				}
+				resultChan <- output
+				break
 			}
 		}
 	}
@@ -103,12 +35,13 @@ func ProcessDirectory(Directory string, state *utils.State, pathChan chan<- stri
 	_ = godirwalk.Walk(Directory, &godirwalk.Options{
 		Unsorted: true,
 		Callback: func(osPathname string, de *godirwalk.Dirent) error {
-			if de.IsDir() == false {
+			if !de.IsDir() {
 				if state.Verbose {
-					fmt.Printf("[%s%s%s] [File] %s\n", utils.Blue, utils.Now(), utils.Reset, osPathname)
+					fmt.Printf("[%s%s%s] [Entity] %s\n", utils.Blue, utils.Now(), utils.Reset, osPathname)
 				}
 				pathChan <- osPathname
 			}
+
 			return nil
 		},
 

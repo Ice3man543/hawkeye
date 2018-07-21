@@ -20,4 +20,5 @@ type Sign struct {
 	ConfigurationFiles bool
 	DatabaseFiles      bool
 	MiscFiles          bool
+	InterestingDir     bool
 }

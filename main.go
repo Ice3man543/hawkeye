@@ -32,6 +32,24 @@ func main() {
 		os.Exit(1)
 	}
 
+	SignaturesUsed := []core.Signature{}
+
+	if state.Signature.CryptoFiles {
+		SignaturesUsed = append(SignaturesUsed, core.CryptoFilesSignatures...)
+	}
+	if state.Signature.ConfigurationFiles {
+		SignaturesUsed = append(SignaturesUsed, core.ConfigurationFileSignatures...)
+	}
+	if state.Signature.DatabaseFiles {
+		SignaturesUsed = append(SignaturesUsed, core.DatabaseFileSignatures...)
+	}
+	if state.Signature.MiscFiles {
+		SignaturesUsed = append(SignaturesUsed, core.MiscSignatures...)
+	}
+	if state.Signature.PasswordFiles {
+		SignaturesUsed = append(SignaturesUsed, core.PasswordFileSignatures...)
+	}
+
 	var OutputArray []*utils.Output
 	if state.Directory != "" {
 		var wg, wg2 sync.WaitGroup
@@ -44,7 +62,7 @@ func main() {
 		for i := 0; i < state.Threads; i++ {
 			go func() {
 				defer wg.Done()
-				core.WorkPath(pathChan, resultChan, state)
+				core.WorkPath(pathChan, resultChan, state, SignaturesUsed)
 			}()
 		}
 
